@@ -1,7 +1,7 @@
 # 📈 Marketing Analytics & Customer Sentiment Analysis
 
 ## 📌 Project Overview
-This project models an enterprise-level Marketing Analytics pipeline. It transforms raw, fragmented customer, product, and campaign data into structured database views, performs Natural Language Processing (NLP) sentiment analysis on customer reviews, and models data into an interactive executive dashboard.
+This project models an enterprise-level Marketing Analytics pipeline. It transforms raw, fragmented customer, product, and campaign data into structured database views, performs Natural Language Processing (NLP) sentiment analysis on customer reviews via Python, and models data into an interactive executive dashboard.
 
 The goal is to analyze marketing efficiency, customer journey bottlenecks, and product feedback to deliver actionable, ROI-focused business strategies.
 
@@ -10,15 +10,16 @@ The goal is to analyze marketing efficiency, customer journey bottlenecks, and p
 ## 🗂️ Project Repository Structure
 
 ```text
-marketing-analytics-portfolio/
+marketing-analytics-sentiment-analysis/
 │
-├── data/                             # Raw datasets in CSV format
+├── data/                             # Raw & processed datasets
 │   ├── raw_customers.csv
 │   ├── raw_customer_journey.csv
 │   ├── raw_customer_reviews.csv
 │   ├── raw_engagement_data.csv
 │   ├── raw_geography.csv
-│   └── raw_products.csv
+│   ├── raw_products.csv
+│   └── fact_customer_reviews_with_sentiment.csv  # Output from Python NLP
 │
 ├── sql_scripts/                      # T-SQL Cleaning & View Creation
 │   ├── 01_clean_customers.sql
@@ -26,6 +27,9 @@ marketing-analytics-portfolio/
 │   ├── 03_clean_customer_reviews.sql
 │   ├── 04_clean_customer_journey.sql
 │   └── 05_clean_engagement_data.sql
+│
+├── python/                           # Python ETL & Sentiment Pipeline
+│   └── 06_sentiment_analysis.py
 │
 └── README.md                         # Documentation & Project Guide
 ```
@@ -51,11 +55,11 @@ MOVE 'PortfolioProject_MarketingAnalytics_log' TO 'C:\Program Files\Microsoft SQ
 
 ---
 
-## 🧹 SQL Data Cleaning & Transformation Layer
+## 🧹 Phase 1: SQL Data Cleaning & Transformation Layer
 
-To ensure efficient staging and downstream analysis, the raw database tables were cleaned and converted into modular database views (`dbo.vw_*`). 
+To ensure efficient staging and downstream analysis, raw database tables were cleaned and converted into modular database views (`dbo.vw_*`).
 
-### Key SQL Cleaning Logic Implemented:
+### Key SQL Logic Implemented:
 * **`dbo.vw_dim_customers`**: Joined `dbo.customers` with `dbo.geography` to add spatial context to customer profiles.
 * **`dbo.vw_dim_products`**: Cleaned and formatted product dimensions and pricing tiers.
 * **`dbo.vw_fact_customer_reviews`**: Staged review text data for downstream Python Natural Language Processing (NLP).
@@ -69,6 +73,20 @@ To ensure efficient staging and downstream analysis, the raw database tables wer
 
 ---
 
-## 🚀 Next Steps
-* **Phase 2 (Python):** Sentiment analysis on review text (`vw_fact_customer_reviews`) using VADER / NLP libraries.
-* **Phase 3 (Power BI):** Star-schema modeling, advanced DAX measures, and interactive executive reporting.
+## 🐍 Phase 2: Python Natural Language Processing (NLP)
+
+To extract structured insights from unstructured customer review text, a Python pipeline was created using **NLTK (VADER)** and **Pandas**.
+
+### Technical Highlights:
+* **Database Connection:** Used `pyodbc` to query `dbo.vw_fact_customer_reviews` directly from Microsoft SQL Server into a Pandas DataFrame.
+* **VADER Sentiment Analysis:** Calculated a continuous normalized compound score (ranging from `-1.0` to `+1.0`) for every review text string.
+* **Hybrid Classification Logic:** Combined text sentiment scores with numerical star ratings (`1–5`) to handle edge cases like sarcasm (e.g., low rating paired with sarcastic positive phrasing).
+* **Dimensional Bucketing:** Segmented continuous compound scores into four categorical ranges (`0.5 to 1.0`, `0.0 to 0.49`, `-0.49 to 0.0`, `-1.0 to -0.5`) to allow dynamic filtering in Power BI.
+* **Data Export:** Exported the enriched dataset to `fact_customer_reviews_with_sentiment.csv`.
+
+---
+
+## 📊 Phase 3: Power BI Dashboard (Next Step)
+* Building a Star-Schema data model connecting dimension and fact tables.
+* Creating DAX measures for Customer Acquisition Cost (CAC), Conversion Rate, and Sentiment Distribution.
+* Designing interactive executive dashboards for stakeholder decision-making.
