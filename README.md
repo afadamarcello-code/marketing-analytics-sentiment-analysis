@@ -1,6 +1,5 @@
 # 📈 Marketing Analytics & Customer Sentiment Analysis
 
-[![Loom Video Walkthrough](https://img.shields.io/badge/Loom-Watch_90s_Video_Demo-625DF5?style=for-the-badge&logo=loom&logoColor=white)](YOUR_LOOM_LINK_HERE)
 [![Power BI PDF](https://img.shields.io/badge/PDF-Download_Report_PDF-Red?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=white)](Marketing_Analytics_Dashboard.pdf)
 
 ## 📌 Project Overview
