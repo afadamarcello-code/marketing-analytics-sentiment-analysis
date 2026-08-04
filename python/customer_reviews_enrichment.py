@@ -28,7 +28,7 @@ def calculate_sentiment(review):
 def cagotrize_sentiment(score, rating):
     if score > 0.05: # Positive sentiment score
         if rating in (5, 4):
-            return "Postive" # High rating and positive sentiment
+            return "Positive" # High rating and positive sentiment
         if rating == 3:
             return "partially positive" # Nuetral rating and postive sentiment
         else:
